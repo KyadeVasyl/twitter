@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 
@@ -8,21 +9,14 @@ router.post("/post-create", function (req, res) {
     try {
         const { username, text, postId } = req.body;
 
-        console.log("POSTID", postId)
-        console.log("TEXT", text)
-        console.log("USERNAME", username)
-
-        if (!username, text, postId) {
+        if (!username || !text) {
             return res.status(400).json({
-                message: "Потрібо передати всі дані для створення поста",
-
+                message:
+                    'Потрібно передати всі дані для створення поста',
             })
         }
 
-
-
-        let post = null;
-
+        let post = null
 
         if (postId) {
             post = Post.getById(Number(postId))
@@ -119,18 +113,17 @@ router.get("/post-item", function (req, res) {
         return res.status(200).json({
             post: {
                 id: post.id,
-                username: post.username,
                 text: post.text,
+                username: post.username,
                 date: post.date,
 
+                reply: post.reply.map((reply) => ({
+                    id: reply.id,
+                    text: reply.text,
+                    username: reply.username,
+                    date: reply.date,
+                })),
             },
-
-            reply: post.reply.map((reply) => ({
-                id: reply.id,
-                text: reply.text,
-                username: reply.username,
-                date: reply.date,
-            }))
         })
     } catch (e) {
 
